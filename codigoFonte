@@ -1,0 +1,5 @@
+//este é um comentário
+A = 10 + 10 - 3 ;
+B = (20.5 +(10.7 * 2))/15;
+C = A + B;
+print C;
