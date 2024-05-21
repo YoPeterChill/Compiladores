@@ -1,4 +1,4 @@
 all:
 	flex cal.l
 	bison -d cal.y
-	gcc *.c -o calc
+	g++ *.c -o calc
