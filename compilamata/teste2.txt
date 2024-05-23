@@ -1,0 +1,7 @@
+mata x = 5;
+mata y = 10;
+mestle (x == y) {
+    informatico("x e menor que y");
+} outomestle {
+    informatico("x nao e menor que y");
+}

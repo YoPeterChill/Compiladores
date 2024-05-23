@@ -1,0 +1,5 @@
+//Atribuição de variáveis e expressões aritméticas
+mata a = 10;
+mata b = 20;
+mata c = a + b;
+informatico(c);

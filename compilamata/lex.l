@@ -13,6 +13,8 @@ int yyerror(const char *s);
 
 "//".*\n { /* ignora */ }
 
+\"[a-zA-Z_' '0-9]+\" {return TOK_STRING;}
+
 "informatico" {return TOK_PRINT;}
 
 "mestle" {return TOK_IF;}
@@ -58,7 +60,7 @@ int yyerror(const char *s);
 
 "mintira" {return TOK_FALSE;}
 
-\"[a-zA-Z_' '0-9]+\" {return TOK_STRING;}
+
 
 [a-zA-Z_][a-zA-Z0-9_]* {return TOK_IDENT;}
 
