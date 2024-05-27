@@ -1,0 +1,6 @@
+ehbaoein A = 1;  // Re-declarando A para este programa
+opa(A < 7){
+    A = A + 1;
+}
+oh (A);
+nana t = vo;  // Re-declarando t para este programa

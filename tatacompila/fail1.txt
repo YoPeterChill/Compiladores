@@ -1,0 +1,7 @@
+// Erro: expressão aritmética incompleta
+oh("comecando o programa");
+ehbaoein x = 10;
+ehbaoein y = 20;
+ehbaoein z = x + y * ; // Erro: expressão aritmética incompleta
+
+

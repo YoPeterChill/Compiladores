@@ -1,0 +1,7 @@
+// Erro: expressão booleana incompleta
+queh ((x > y &&)) { 
+oh("oi");
+} 
+donaoein {
+oh ("x e maior que y");
+}

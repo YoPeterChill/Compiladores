@@ -1,9 +1,3 @@
-//Estrutura de repetição (While) e expressões lógicas
-mata i = 0;
-aimeavida (i < 10) {
-    informatico(i);
-    i = i + 1;
-    mestle (i == 5) {
-        nengue;
-    }
-}
+tataboi B = 4.78;
+matato s = "Hello world";
+oiaoboiai c = 'A';

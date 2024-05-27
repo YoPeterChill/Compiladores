@@ -1,0 +1,11 @@
+oh ("Iniciando Programa 2");
+
+ehbaoein a = 5;
+ehbaoein b = 10;
+
+queh(a == b {                      // Erro: falta fechar parênteses
+    oh("a eh igual a b");
+}
+donaoein{
+    oh("a nao eh igual a b");
+}

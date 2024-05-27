@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/paborges/Documentos/Compiladores/Calculadora",
-      "program": "/home/paborges/Documentos/Compiladores/Calculadora/build/Debug/outDebug",
+      "cwd": "/home/paborges/Documentos/Compiladores/Calculadora/tatacompila",
+      "program": "/home/paborges/Documentos/Compiladores/Calculadora/tatacompila/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
