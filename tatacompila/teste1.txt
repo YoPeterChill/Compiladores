@@ -1,0 +1,30 @@
+ehbaoein A = 1;
+
+nana t = vo;
+
+matato C = "banana";
+
+var = uta(ehbaoein);
+
+queh(a){
+    A = 2;  
+} donaoein queh (A == B){
+    A = 1;
+} donaoein {
+    A = 3;
+    A = "tata 123";
+    oh (A);
+}
+
+tataboi B = 4.78;
+
+matato s = "Hello world";
+
+oiaoboiai c = 'A';
+
+opa(A < 7){
+    A = A + 1;
+}
+oh (A);
+
+nana t = vo;
