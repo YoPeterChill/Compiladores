@@ -69,10 +69,14 @@
 /* First part of user prologue.  */
 #line 1 "cal.y"
 
+#include "nodes.h"
+
 int yyerror(const char *s);
 int yylex(void);
+int errorcount = 0;
+extern bool force_print_tree;
 
-#line 76 "cal.tab.c"
+#line 80 "cal.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -121,7 +125,8 @@ enum yysymbol_kind_t
   YYSYMBOL_global = 18,                    /* global  */
   YYSYMBOL_expr = 19,                      /* expr  */
   YYSYMBOL_term = 20,                      /* term  */
-  YYSYMBOL_factor = 21                     /* factor  */
+  YYSYMBOL_factor = 21,                    /* factor  */
+  YYSYMBOL_unary = 22                      /* unary  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -447,18 +452,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  8
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   23
+#define YYLAST   33
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  7
+#define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  16
+#define YYNRULES  19
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  29
+#define YYNSTATES  34
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   261
@@ -508,8 +513,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    17,    17,    19,    22,    25,    28,    31,    34,    37,
-      40,    43,    46,    49,    52,    55,    58
+       0,    34,    34,    48,    53,    59,    63,    68,    72,    76,
+      80,    84,    88,    92,    96,   100,   104,   108,   112,   116
 };
 #endif
 
@@ -528,7 +533,7 @@ static const char *const yytname[] =
   "\"end of file\"", "error", "\"invalid token\"", "TOK_IDENT",
   "TOK_PRINT", "TOK_FLOAT", "TOK_INT", "'='", "';'", "'+'", "'-'", "'*'",
   "'/'", "'('", "')'", "$accept", "program", "globals", "global", "expr",
-  "term", "factor", YY_NULLPTR
+  "term", "factor", "unary", YY_NULLPTR
 };
 
 static const char *
@@ -538,12 +543,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-7)
+#define YYPACT_NINF (-16)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF (-1)
+#define YYTABLE_NINF (-3)
 
 #define yytable_value_is_error(Yyn) \
   0
@@ -552,9 +557,10 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       8,    -6,    12,    18,     8,    -7,    -3,    11,    -7,    -7,
-      -7,    -7,    -7,    -3,    -2,     2,    -7,    -7,    -5,    -7,
-      -3,    -3,    -3,    -3,    -7,     2,     2,    -7,    -7
+      18,    -6,     0,     6,    20,    14,   -16,   -16,    -2,     8,
+     -16,   -16,   -16,   -16,   -16,    -2,    -2,    15,    16,   -16,
+     -16,   -16,   -16,    -4,   -16,    -2,    -2,    -2,    -2,   -16,
+      16,    16,   -16,   -16
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -562,21 +568,22 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     2,     4,     0,     0,     1,     3,
-      14,    16,    15,     0,     0,     9,    12,     6,     0,     5,
-       0,     0,     0,     0,    13,     7,     8,    10,    11
+       0,     0,     0,     0,     0,     0,     4,     7,     0,     0,
+       1,     3,    15,    17,    16,     0,     0,     0,    10,    13,
+      18,     6,    19,     0,     5,     0,     0,     0,     0,    14,
+       8,     9,    11,    12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    -7,    16,    10,    -4,    -1
+     -16,   -16,   -16,    21,    17,     4,   -15,   -16
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     3,     4,     5,    14,    15,    16
+       0,     4,     5,     6,    17,    18,    19,    20
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -584,39 +591,42 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      10,     6,    11,    12,    20,    21,    19,    20,    21,    24,
-      13,     1,     2,    22,    23,     7,    25,    26,     8,    17,
-       9,    27,    28,    18
+      22,    12,     7,    13,    14,    25,    26,     8,    15,     9,
+      29,    16,    32,    33,    -2,     1,    21,     2,     3,     1,
+      10,     2,     3,    24,    25,    26,    11,    27,    28,    30,
+      31,     0,     0,    23
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     7,     5,     6,     9,    10,     8,     9,    10,    14,
-      13,     3,     4,    11,    12,     3,    20,    21,     0,     8,
-       4,    22,    23,    13
+      15,     3,     8,     5,     6,     9,    10,     7,    10,     3,
+      14,    13,    27,    28,     0,     1,     8,     3,     4,     1,
+       0,     3,     4,     8,     9,    10,     5,    11,    12,    25,
+      26,    -1,    -1,    16
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,    16,    17,    18,     7,     3,     0,    18,
-       3,     5,     6,    13,    19,    20,    21,     8,    19,     8,
-       9,    10,    11,    12,    14,    20,    20,    21,    21
+       0,     1,     3,     4,    16,    17,    18,     8,     7,     3,
+       0,    18,     3,     5,     6,    10,    13,    19,    20,    21,
+      22,     8,    21,    19,     8,     9,    10,    11,    12,    14,
+      20,    20,    21,    21
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    15,    16,    17,    17,    18,    18,    19,    19,    19,
-      20,    20,    20,    21,    21,    21,    21
+       0,    15,    16,    17,    17,    18,    18,    18,    19,    19,
+      19,    20,    20,    20,    21,    21,    21,    21,    21,    22
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     1,     4,     3,     3,     3,     1,
-       3,     3,     1,     3,     1,     1,     1
+       0,     2,     1,     2,     1,     4,     3,     2,     3,     3,
+       1,     3,     3,     1,     3,     1,     1,     1,     1,     2
 };
 
 
@@ -1349,106 +1359,166 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 3: /* globals: globals global  */
-#line 19 "cal.y"
-                        {
-}
-#line 1357 "cal.tab.c"
-    break;
+  case 2: /* program: globals  */
+#line 34 "cal.y"
+                  {
+    Node *program = new Program();
+    program->append((yyvsp[0].node));
 
-  case 4: /* globals: global  */
-#line 22 "cal.y"
-                 {
-}
-#line 1364 "cal.tab.c"
-    break;
+    // aqui vai a analise semantica
+    CheckVarDecl cvd;
+    cvd.check(program);
 
-  case 5: /* global: TOK_IDENT '=' expr ';'  */
-#line 25 "cal.y"
-                                {
-}
-#line 1371 "cal.tab.c"
-    break;
-
-  case 6: /* global: TOK_PRINT TOK_IDENT ';'  */
-#line 28 "cal.y"
-                                 {
+    if (errorcount > 0 )
+        cout << errorcount <<" error(s) found." << endl;
+    if (force_print_tree || errorcount == 0 )
+        printf_tree(program);
 }
 #line 1378 "cal.tab.c"
     break;
 
-  case 7: /* expr: expr '+' term  */
-#line 31 "cal.y"
-                     {
+  case 3: /* globals: globals global  */
+#line 48 "cal.y"
+                             {
+    (yyvsp[-1].node)->append((yyvsp[0].node));
+    (yyval.node) = (yyvsp[-1].node);
 }
-#line 1385 "cal.tab.c"
+#line 1387 "cal.tab.c"
     break;
 
-  case 8: /* expr: expr '-' term  */
-#line 34 "cal.y"
-                     {
-}
-#line 1392 "cal.tab.c"
-    break;
-
-  case 9: /* expr: term  */
-#line 37 "cal.y"
-           {
-}
-#line 1399 "cal.tab.c"
-    break;
-
-  case 10: /* term: term '*' factor  */
-#line 40 "cal.y"
-                      {
-}
-#line 1406 "cal.tab.c"
-    break;
-
-  case 11: /* term: term '/' factor  */
-#line 43 "cal.y"
-                      {
-}
-#line 1413 "cal.tab.c"
-    break;
-
-  case 12: /* term: factor  */
-#line 46 "cal.y"
-             {
-}
-#line 1420 "cal.tab.c"
-    break;
-
-  case 13: /* factor: '(' expr ')'  */
-#line 49 "cal.y"
-                      {
-}
-#line 1427 "cal.tab.c"
-    break;
-
-  case 14: /* factor: TOK_IDENT  */
-#line 52 "cal.y"
-                   {
-}
-#line 1434 "cal.tab.c"
-    break;
-
-  case 15: /* factor: TOK_INT  */
-#line 55 "cal.y"
+  case 4: /* globals: global  */
+#line 53 "cal.y"
                  {
+    Node *n = new Node();
+    n->append((yyvsp[0].node));
+    (yyval.node) = n;
 }
-#line 1441 "cal.tab.c"
+#line 1397 "cal.tab.c"
     break;
 
-  case 16: /* factor: TOK_FLOAT  */
-#line 58 "cal.y"
+  case 5: /* global: TOK_IDENT '=' expr ';'  */
+#line 59 "cal.y"
+                                {
+    (yyval.node) = new Variable((yyvsp[-3].str), (yyvsp[-1].node));
+}
+#line 1405 "cal.tab.c"
+    break;
+
+  case 6: /* global: TOK_PRINT TOK_IDENT ';'  */
+#line 63 "cal.y"
+                                 {
+    Ident *id = new Ident((yyvsp[-1].str));
+    (yyval.node) = new Print(id);
+}
+#line 1414 "cal.tab.c"
+    break;
+
+  case 7: /* global: error ';'  */
+#line 68 "cal.y"
                    {
+    (yyval.node) = new Node();
 }
-#line 1448 "cal.tab.c"
+#line 1422 "cal.tab.c"
+    break;
+
+  case 8: /* expr: expr '+' term  */
+#line 72 "cal.y"
+                         {
+    (yyval.node) = new BinaryOp((yyvsp[-2].node), (yyvsp[0].node), '+');
+}
+#line 1430 "cal.tab.c"
+    break;
+
+  case 9: /* expr: expr '-' term  */
+#line 76 "cal.y"
+                         {
+    (yyval.node) = new BinaryOp((yyvsp[-2].node), (yyvsp[0].node), '-');
+}
+#line 1438 "cal.tab.c"
+    break;
+
+  case 10: /* expr: term  */
+#line 80 "cal.y"
+            {
+    (yyval.node) = (yyvsp[0].node);
+}
+#line 1446 "cal.tab.c"
+    break;
+
+  case 11: /* term: term '*' factor  */
+#line 84 "cal.y"
+                           {
+    (yyval.node) = new BinaryOp((yyvsp[-2].node), (yyvsp[0].node), '*');
+}
+#line 1454 "cal.tab.c"
+    break;
+
+  case 12: /* term: term '/' factor  */
+#line 88 "cal.y"
+                           {
+    (yyval.node) = new BinaryOp((yyvsp[-2].node), (yyvsp[0].node), '/');
+}
+#line 1462 "cal.tab.c"
+    break;
+
+  case 13: /* term: factor  */
+#line 92 "cal.y"
+              {
+    (yyval.node) = (yyvsp[0].node);
+}
+#line 1470 "cal.tab.c"
+    break;
+
+  case 14: /* factor: '(' expr ')'  */
+#line 96 "cal.y"
+                      {
+    (yyval.node) = (yyvsp[-1].node);
+}
+#line 1478 "cal.tab.c"
+    break;
+
+  case 15: /* factor: TOK_IDENT  */
+#line 100 "cal.y"
+                        {
+    (yyval.node) = new Ident((yyvsp[0].str));
+}
+#line 1486 "cal.tab.c"
+    break;
+
+  case 16: /* factor: TOK_INT  */
+#line 104 "cal.y"
+                      {
+    (yyval.node) = new Integer((yyvsp[0].itg));
+}
+#line 1494 "cal.tab.c"
+    break;
+
+  case 17: /* factor: TOK_FLOAT  */
+#line 108 "cal.y"
+                        {
+    (yyval.node) = new Float((yyvsp[0].flt));
+}
+#line 1502 "cal.tab.c"
+    break;
+
+  case 18: /* factor: unary  */
+#line 112 "cal.y"
+                  {
+    (yyval.node) = (yyvsp[0].node);
+}
+#line 1510 "cal.tab.c"
+    break;
+
+  case 19: /* unary: '-' factor  */
+#line 116 "cal.y"
+                      {
+    (yyval.node) = new Unary((yyvsp[0].node), '-');
+}
+#line 1518 "cal.tab.c"
     break;
 
 
-#line 1452 "cal.tab.c"
+#line 1522 "cal.tab.c"
 
       default: break;
     }
@@ -1672,5 +1742,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 61 "cal.y"
-
+#line 120 "cal.y"

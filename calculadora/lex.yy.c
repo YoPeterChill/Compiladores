@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+#line 2 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -382,7 +382,7 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[30] =
     {   0,
         0,    0,   17,   15,    1,    1,    8,    9,    6,    4,
-        5,    7,   14,   11,   10,   12,   12,    0,   13,   14,
+        5,    7,   14,   10,   11,   12,   12,    0,   13,   14,
        12,   12,    0,    2,   13,   12,   12,    3,    0
     } ;
 
@@ -482,12 +482,17 @@ char *yytext;
 #line 1 "cal.l"
 #line 2 "cal.l"
 #include <stdio.h>
+#include <stdlib.h>
+
+char *build_file_name;
+bool force_print_tree = false;
+class Node;
 #include "cal.tab.h"
 
 int yyerror(const char *s);
 
-#line 490 "lex.yy.c"
-#line 491 "lex.yy.c"
+#line 494 "lex.yy.c"
+#line 495 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -704,11 +709,10 @@ YY_DECL
 		}
 
 	{
-#line 11 "cal.l"
+#line 16 "cal.l"
 
 
-
-#line 712 "lex.yy.c"
+#line 715 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -778,95 +782,97 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 14 "cal.l"
-{/* ignora */}
+#line 18 "cal.l"
+{ /* ignora */ }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 17 "cal.l"
-{ /* ignora */}
+#line 20 "cal.l"
+{ /*  ignora */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "cal.l"
-{ return TOK_PRINT; }
+#line 22 "cal.l"
+{return TOK_PRINT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "cal.l"
+#line 24 "cal.l"
 {return '+';}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "cal.l"
+#line 25 "cal.l"
 {return '-';}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "cal.l"
+#line 26 "cal.l"
 {return '*';}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "cal.l"
+#line 27 "cal.l"
 {return '/';}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 25 "cal.l"
+#line 28 "cal.l"
 {return '(';}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "cal.l"
+#line 29 "cal.l"
 {return ')';}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "cal.l"
-{return '=';}
+#line 30 "cal.l"
+{return ';';}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "cal.l"
-{return ';';}
+#line 31 "cal.l"
+{return '=';}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 31 "cal.l"
+#line 33 "cal.l"
 {
-	return TOK_IDENT;
+  yylval.str = strndup(yytext, yyleng);
+  return TOK_IDENT;
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 35 "cal.l"
+#line 38 "cal.l"
 {
-	return TOK_FLOAT;
+  yylval.flt = atof(yytext);
+  return TOK_FLOAT;
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "cal.l"
+#line 43 "cal.l"
 {
-	return TOK_INT;
-} 
+  yylval.itg = atoi(yytext);
+  return TOK_INT;
+}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "cal.l"
-{ 
-	printf("Símbolo não reconhecido %c\n", yytext[0]);
-
+#line 48 "cal.l"
+{
+    printf("Símbolo não reconhecido %c\n", yytext[0]);
   }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 51 "cal.l"
+#line 53 "cal.l"
 ECHO;
 	YY_BREAK
-#line 870 "lex.yy.c"
+#line 875 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1883,40 +1889,46 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 51 "cal.l"
+#line 53 "cal.l"
 
+
+int yywrap(){
+  return 1;
+}
+
+extern int errorcount;
 
 int yyerror(const char *s) {
-	printf("Erro de sintaxe na linha %d: %s\n", yylineno, s);
-	return 1;
+  printf("%s:%d:0 %s\n", build_file_name, yylineno, s);
+  errorcount++;
+  return 1;
 }
 
-int yywrap() {
-	return 1;
+int main(int argc, char *argv[]) {
+
+  if(argc <= 1){
+    printf("Sintaxe: %s nome_do_programa\n", argv[0]);
+    return 1;
+  }
+
+  int build_file_id = 1;
+
+if (strcmp(argv[1], "-f") == 0) {
+  force_print_tree = true;
+  build_file_id++;
 }
 
-int main(int argc, char *argv[]){
+  build_file_name = argv[build_file_id];
+  yyin = fopen(build_file_name, "r");
+  if (yyin == NULL){
+    printf("Não foi possível abrir o arquivo %s.\n, build_file_name");
+    return 1;
+  }
 
-	if (argc <= 1) {
-		printf("Sintaxe: %s nome_do_programa\n",
-			argv[0]);
-		return 1;
-	}
+  yyparse();
 
-	yyin = fopen(argv[1], "r");
-	if (yyin == NULL) {
-		printf("Não foi possível abrir o arquivo %s.\n", argv[1]);
-		return 1;
-	}
+  if (yyin)
+    fclose(yyin);
 
-	yyparse();
-
-	if (yyin){
-		fclose(yyin);
-
-	return 0;
-	}
-
-
+  return 0;
 }
-
